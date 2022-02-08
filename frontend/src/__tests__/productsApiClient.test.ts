@@ -1,5 +1,6 @@
 import nock from 'nock';
-import {createProduct, getProducts} from "../productsApiClient";
+import {createProduct, getProducts, updateProductQuantity} from "../productsApiClient";
+import {body} from "msw/lib/types/context";
 
 describe('productsApiClient', () => {
     describe('getProducts', () => {
@@ -28,5 +29,20 @@ describe('productsApiClient', () => {
             expect(response.name).toEqual("my-new-product");
             expect(response.quantity).toEqual(0);
         });
+
+        it('should make a PATCH request to update quantity', async()=>{
+            const scope = nock('http://localhost', {
+                reqheaders: {
+                    'Content-Type': 'application/json'
+                }
+            }).patch('/products', {id:0, name: "my-new-product", quantity: 3})
+                .reply(200, {id:0, name: "my-new-product", quantity: 3});
+
+            const response = await updateProductQuantity({id:0, name: "my-new-product", quantity: 3});
+
+            expect(scope.isDone()).toEqual(true);
+            expect(response.name).toEqual("my-new-product");
+            expect(response.quantity).toEqual(3);
+        })
     });
 });

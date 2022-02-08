@@ -4,5 +4,6 @@ import org.asi.partsunlimited.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
+    Long findIdByName(String name);
+    Boolean existsByName(String name);
 }

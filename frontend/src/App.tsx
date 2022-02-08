@@ -1,7 +1,8 @@
 import React, {FormEvent, useEffect, useState} from "react";
-import {createProduct, getProducts} from "./productsApiClient";
+import {createProduct, getProducts, updateProductQuantity} from "./productsApiClient";
 import {Box, Container} from "@mui/material";
 import {Product} from "./product";
+import {PartList} from "./PartList";
 
 const App = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -17,6 +18,9 @@ const App = () => {
             getProducts().then(setProducts);
         });
     };
+    const updateQuantity=(product:Product)=>{
+        updateProductQuantity(product).then(()=>{setProductName(" ")});
+    }
 
     useEffect(() => {
         getProducts().then(setProducts);
@@ -27,24 +31,14 @@ const App = () => {
             <h1>Parts Unlimited Inventory</h1>
             <Box display='flex' flexDirection='row'>
                 <Box>
-                    <h2>Product</h2>
-                    {products.map((product, index) => (
-                        <div key={index}>{product.name}</div>
-                    ))}
                     <form onSubmit={submitForm}>
-                        <br/>
                         <label>
                             Product to add
                             <input name="product" type="text" onChange={setProductNameFromInput}/>
                         </label>
                         <button type="submit">Submit</button>
                     </form>
-                </Box>
-                <Box>
-                    <h2>Quantity</h2>
-                    {products.map((product, index) => (
-                        <div key={index}>{product.quantity}</div>
-                    ))}
+                    <PartList products={products} updateQuantity={updateQuantity}/>
                 </Box>
             </Box>
         </Container>

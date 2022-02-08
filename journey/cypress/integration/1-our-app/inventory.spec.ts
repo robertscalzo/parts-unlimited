@@ -8,7 +8,14 @@ describe("inventory", () => {
       cy.visit("http://localhost:8080");
       addProduct("shiny-new-product");
       cy.findByText("shiny-new-product").should("exist");
-      cy.findByText("0").should("exist");
+      cy.findByText("Quantity: 0").should("exist");
     });
   });
+  describe("when changing a quantity on an existing product",()=>{
+    it("should display the new product quantity with the updated value",()=>{
+      cy.findByRole("spinbutton",{name:"Quantity to Add"}).click().type("3");
+      cy.findByRole('button',{name:"Add"}).click()
+      cy.findByText("Quantity: 3").should("exist");
+    })
+  })
 });

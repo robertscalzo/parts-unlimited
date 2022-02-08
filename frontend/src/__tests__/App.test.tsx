@@ -10,43 +10,49 @@ const mockGetProducts = getProducts as jest.MockedFunction<typeof getProducts>;
 const mockCreateProduct = createProduct as jest.MockedFunction<typeof createProduct>;
 
 const addProduct = (product: string) => {
-  userEvent.type(screen.getByLabelText("Product to add"), product);
-  userEvent.click(screen.getByRole("button", {name: /submit/i}));
+    userEvent.type(screen.getByLabelText("Product to add"), product);
+    userEvent.click(screen.getByRole("button", {name: /submit/i}));
 }
 
 describe("inventory", () => {
-  describe("when I view the inventory", () => {
-    it("should display the products", async () => {
-      mockGetProducts.mockResolvedValue([{name: "a product", quantity: 0}]);
+    it('should display App Headers',   async()=>{
+        mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", quantity: 0});
+        mockGetProducts.mockResolvedValueOnce([]);
+        mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", quantity: 0}]);
 
-      render(<App/>);
+        render(<App/>);
 
-      expect(screen.getByText("Parts Unlimited Inventory")).toBeInTheDocument();
-      expect(screen.getByText("Product")).toBeInTheDocument();
-      expect(await screen.findByText("a product")).toBeInTheDocument();
+        expect(screen.getByText("Parts Unlimited Inventory")).toBeInTheDocument();
     });
 
-    it("should display the products' quantities", async () => {
-      mockGetProducts.mockResolvedValue([{name: "a product", quantity: 0}]);
+    describe("Product Form Tests", () => {
+        it("should display the new product", async () => {
+            mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", quantity: 0});
+            mockGetProducts.mockResolvedValueOnce([]);
+            mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", quantity: 0}]);
 
-      render(<App/>);
+            render(<App/>);
+            addProduct("shiny new product");
 
-      expect(screen.getByText("Quantity")).toBeInTheDocument();
-      expect(await screen.findByText("0")).toBeInTheDocument();
+            expect(mockCreateProduct).toHaveBeenCalledWith("shiny new product");
+            expect(await screen.findByText("shiny new product")).toBeInTheDocument();
+        });
     });
-  });
 
-  describe("when I add a new product", () => {
-    it("should display the new product", async () => {
-      mockCreateProduct.mockResolvedValueOnce({name: "shiny new product", quantity: 0});
-      mockGetProducts.mockResolvedValueOnce([]);
-      mockGetProducts.mockResolvedValueOnce([{name: "shiny new product", quantity: 0}]);
+    describe("when I add inventory to a product", () => {
+        it("should display the product with updated inventory", async () => {
+            mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product", quantity: 0});
+            mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", quantity: 0}]);
 
-      render(<App/>);
-      addProduct("shiny new product");
+            render(<App/>)
 
-      expect(mockCreateProduct).toHaveBeenCalledWith("shiny new product");
-      expect(await screen.findByText("shiny new product")).toBeInTheDocument();
-    });
-  });
+            const addButton = await screen.findByRole('button', {name: /add/i});
+            const quantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Add"});
+
+            userEvent.click(quantityDropDown);
+            userEvent.type(quantityDropDown, '3');
+            userEvent.click(addButton);
+            expect(await screen.findByText('Quantity: 3')).toBeInTheDocument();
+        })
+    })
 });

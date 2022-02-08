@@ -8,3 +8,7 @@ export async function createProduct(product: string): Promise<Product> {
 export async function getProducts(): Promise<Product[]> {
   return (await axios.get<Product[]>("/products")).data
 }
+
+export async function updateProductQuantity(product:Product):Promise<Product>{
+  return (await axios.patch<Product>("/products",product, {headers:{'Content-Type': 'application/json'}})).data;
+}

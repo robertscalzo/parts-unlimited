@@ -29,6 +29,12 @@ public class ProductController {
         URI location = createResourceLocation("/products",savedProduct.getId());
         return ResponseEntity.created(location).body(savedProduct);
     }
+    @PatchMapping("/products")
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        var updatedProduct = productService.updateProduct(product);
+        URI location = createResourceLocation("/products",updatedProduct.getId());
+        return ResponseEntity.created(location).body(updatedProduct);
+    }
 
     private URI createResourceLocation(String path, Long resourceId) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().port("8080").path(path)
