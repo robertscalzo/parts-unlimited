@@ -59,7 +59,6 @@ const App = () => {
         }
     }
 
-
     return (
         <Container sx={{mx: 1, my: 1}}>
             <h1>Parts Unlimited Inventory</h1>
@@ -72,14 +71,16 @@ const App = () => {
                         </label>
                         <button type="submit">Submit</button>
                     </form>
-                    <PartList products={products} updateQuantity={updateQuantity} sellQuantity={sellQuantity}/>
+                    <Box sx={{width: 1800, height: 1000}}>
+                        <PartList products={products} updateQuantity={updateQuantity} sellQuantity={sellQuantity}/>
+                    </Box>
+                    <Snackbar
+                        open={open}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                        message={saleQuantity ? saleProductName + " X " + saleQuantity : saleProductName}
+                    />
                 </Box>
-                <Snackbar
-                    open={open}
-                    autoHideDuration={6000}
-                    onClose={handleClose}
-                    message={saleQuantity ? saleProductName + " X " + saleQuantity : saleProductName}
-                />
             </Box>
         </Container>
     );

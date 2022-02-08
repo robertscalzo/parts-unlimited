@@ -1,11 +1,10 @@
 import nock from 'nock';
 import {createProduct, getProducts, updateProductQuantity} from "../productsApiClient";
-import {body} from "msw/lib/types/context";
 
 describe('productsApiClient', () => {
     describe('getProducts', () => {
         it('should make a GET request to retrieve all products', async () => {
-            const expectedProducts = [{name: 'first-product', quantity: 0}, {name: 'second-product', quantity: 2}];
+            const expectedProducts = [{name: 'first-product', modelNumber:7, quantity: 0}, {name: 'second-product', modelNumber:7, quantity: 2}];
             nock('http://localhost').get('/products').reply(200, expectedProducts);
 
             const actualProducts = await getProducts();
@@ -21,7 +20,7 @@ describe('productsApiClient', () => {
                     'Content-Type': 'text/plain'
                 }
             }).post('/products', 'my-new-product')
-                .reply(200, {name: "my-new-product", quantity: 0});
+                .reply(200, {name: "my-new-product", modelNumber:7, quantity: 0});
 
             const response = await createProduct("my-new-product");
 
@@ -35,10 +34,10 @@ describe('productsApiClient', () => {
                 reqheaders: {
                     'Content-Type': 'application/json'
                 }
-            }).patch('/products', {id:0, name: "my-new-product", quantity: 3})
-                .reply(200, {id:0, name: "my-new-product", quantity: 3});
+            }).patch('/products', {id:0, name: "my-new-product",modelNumber:7, quantity: 3})
+                .reply(200, {id:0, name: "my-new-product",modelNumber:7, quantity: 3});
 
-            const response = await updateProductQuantity({id:0, name: "my-new-product", quantity: 3});
+            const response = await updateProductQuantity({id:0, name: "my-new-product", modelNumber:7, quantity: 3});
 
             expect(scope.isDone()).toEqual(true);
             expect(response.name).toEqual("my-new-product");

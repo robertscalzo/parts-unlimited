@@ -34,7 +34,7 @@ class ProductControllerTests {
 
     @Test
     void shouldSaveProduct_WhenANewProductIsAdded() throws Exception {
-        when(productService.addProduct("some-product")).thenReturn(new Product(1L, "some-product", 0));
+        when(productService.addProduct("some-product")).thenReturn(new Product(1L, "some-product", 7,0));
 
         this.mockMvc.perform(post("/products").contentType(MediaType.TEXT_PLAIN).content("some-product"))
                 .andExpect(status().isCreated())
@@ -45,8 +45,8 @@ class ProductControllerTests {
     @Test
     void shouldRetrieveAllProducts_WhenGettingProducts() throws Exception {
         when(productService.getProducts()).thenReturn(List.of(
-                new Product(1L, "first-product", 0),
-                new Product(2L, "second-product", 1)));
+                new Product(1L, "first-product", 7, 0),
+                new Product(2L, "second-product",7, 1)));
 
         this.mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
@@ -60,8 +60,8 @@ class ProductControllerTests {
 
     @Test
     void shouldPatchProduct_WhenReceivesUpdateQuantityRequest() throws Exception {
-        Product updatedProduct=new Product(1L,"some-product",3);
-        when(productService.updateProduct(updatedProduct)).thenReturn(new Product(1L, "some-product", 3));
+        Product updatedProduct=new Product(1L,"some-product",7,3);
+        when(productService.updateProduct(updatedProduct)).thenReturn(new Product(1L, "some-product",7, 3));
 
         this.mockMvc.perform(patch("/products").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedProduct)))

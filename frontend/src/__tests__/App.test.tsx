@@ -16,9 +16,9 @@ const addProduct = (product: string) => {
 
 describe("inventory", () => {
     it('should display App Headers',   async()=>{
-        mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", quantity: 0});
+        mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", modelNumber:7, quantity: 0});
         mockGetProducts.mockResolvedValueOnce([]);
-        mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", quantity: 0}]);
+        mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", modelNumber:7, quantity: 0}]);
 
         render(<App/>);
 
@@ -27,9 +27,9 @@ describe("inventory", () => {
 
     describe("Product Form Tests", () => {
         it("should display the new product", async () => {
-            mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", quantity: 0});
+            mockCreateProduct.mockResolvedValueOnce({id:1,name: "shiny new product", modelNumber:7,quantity: 0});
             mockGetProducts.mockResolvedValueOnce([]);
-            mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", quantity: 0}]);
+            mockGetProducts.mockResolvedValueOnce([{id:1,name: "shiny new product", modelNumber:7,quantity: 0}]);
 
             render(<App/>);
             addProduct("shiny new product");
@@ -41,8 +41,8 @@ describe("inventory", () => {
 
     describe("when I add or sell inventory of a product", () => {
         beforeEach(async ()=>{
-            mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product", quantity: 0});
-            mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", quantity: 0}]);
+            mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product",modelNumber:7, quantity: 0});
+            mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", modelNumber:7,quantity: 0}]);
 
             render(<App/>)
         });

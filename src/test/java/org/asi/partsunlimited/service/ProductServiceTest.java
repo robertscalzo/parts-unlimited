@@ -30,7 +30,8 @@ class ProductServiceTest {
 
     @Test
     void shouldRetrieveAllProducts(){
-        List<Product> expectedProducts = List.of(new Product(1L, "first-product", 0), new Product(2L, "second-product", 0));
+        List<Product> expectedProducts = List.of(new Product(1L, "first-product", 7,0),
+                new Product(2L, "second-product",7, 0));
         when(productRepository.findAll()).thenReturn(expectedProducts);
 
         List<Product> actualProducts = productService.getProducts();
@@ -39,8 +40,8 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldCreateANewProductWithQuantityZero(){
-        Product productToSave = new Product("new-product", 0);
+    void shouldCreateANewProductWithQuantityAndModelNumberZero(){
+        Product productToSave = new Product("new-product" ,0);
 
         productService.addProduct("new-product");
 
@@ -48,10 +49,10 @@ class ProductServiceTest {
     }
     @Test
     void shouldUpdateAnExistingProduct_WithNewQuantity(){
-        Product oldProduct = new Product(1L,"new-product", 0);
+        Product oldProduct = new Product(1L,"new-product", 7,0);
         productService.addProduct("new-product");
 
-        Product updatedProduct = new Product(1L,"new-product", 3);
+        Product updatedProduct = new Product(1L,"new-product", 7,3);
         updatedProduct = productService.updateProduct(updatedProduct);
         assertThat(updatedProduct).isNotEqualTo(oldProduct);
     }
