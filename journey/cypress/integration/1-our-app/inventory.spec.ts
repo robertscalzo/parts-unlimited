@@ -18,4 +18,16 @@ describe("inventory", () => {
       cy.findByText("Quantity: 3").should("exist");
     })
   })
+  describe("when trying to sell product",()=>{
+    it("should display DECLINATION message if you sell too much",()=>{
+      cy.findByRole("spinbutton",{name:"Quantity to Sell"}).click().type("4");
+      cy.findByRole('button',{name:"Sell"}).click()
+      cy.findByText("Cannot Sell - inventory too low!").should("exist");
+    })
+    it("should display correct quantity in  message if sale is valid",()=>{
+      cy.findByRole("spinbutton",{name:"Quantity to Sell"}).click().clear().type("2");
+      cy.findByRole('button',{name:"Sell"}).click()
+      cy.findByText("Sell: shiny-new-product X 2").should("exist");
+    })
+  })
 });
