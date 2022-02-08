@@ -1,6 +1,6 @@
 import React, {FormEvent, useEffect, useState} from "react";
 import {createProduct, getProducts, updateProductQuantity} from "./productsApiClient";
-import {Box, Button, Container, IconButton, Snackbar} from "@mui/material";
+import {Box, Container, Snackbar} from "@mui/material";
 import {Product} from "./product";
 import {PartList} from "./PartList";
 
@@ -8,8 +8,12 @@ const App = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [productName, setProductName] = useState<string>("");
     const [open, setOpen] = React.useState(false);
-    const [sellValue, setSellValue] = React.useState("");
-    const [sellName, setSellName] = React.useState("");
+    const [saleQuantity, setSaleQuantity] = React.useState("");
+    const [saleProductName, setSaleProductName] = React.useState("");
+
+    useEffect(() => {
+        getProducts().then(setProducts);
+    }, []);
 
     const displayToast = () => {
         setOpen(true);
@@ -19,7 +23,6 @@ const App = () => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
 
@@ -36,25 +39,22 @@ const App = () => {
     };
     const updateQuantity = (product: Product) => {
         updateProductQuantity(product);
-        setSellValue(product.quantity.toString());
+        setSaleQuantity(product.quantity.toString());
     }
     const sellQuantity = (product: Product, sellValue: number) => {
         if (product.quantity >= sellValue) {
             product.quantity = product.quantity - sellValue;
             updateQuantity(product);
-            setSellValue(sellValue.toString());
-            setSellName(product.name);
+            setSaleQuantity(sellValue.toString());
+            setSaleProductName(product.name);
             displayToast();
         } else {
-            setSellValue("");
-            setSellName("Cannot Sell - inventory too low!");
+            setSaleQuantity("");
+            setSaleProductName("Cannot Sell - inventory too low!");
             displayToast();
         }
     }
 
-    useEffect(() => {
-        getProducts().then(setProducts);
-    }, []);
 
     return (
         <Container sx={{mx: 1, my: 1}}>
@@ -74,7 +74,7 @@ const App = () => {
                     open={open}
                     autoHideDuration={6000}
                     onClose={handleClose}
-                    message={sellValue ? "Sell: " + sellName + " X " + sellValue : sellName}
+                    message={saleQuantity ? "Sell: " + saleProductName + " X " + saleQuantity : saleProductName}
                 />
             </Box>
         </Container>

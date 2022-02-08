@@ -6,19 +6,19 @@ interface QuantityFormProps {
     product: Product,
     index: number,
     updateQuantity:(product:Product)=>void,
-    sellQuantity:(product:Product, sellValue:number)=>void,
+    sellQuantity:(product:Product, saleQuantity:number)=>void,
 }
 
 
 export const QuantityForm: React.FC<QuantityFormProps> = ({product, index, updateQuantity, sellQuantity}) => {
-    let sellValue=0;
+    let formSaleValue=0;
     const submitAddForm = (event: FormEvent) => {
         event.preventDefault();
         updateQuantity(product)
     };
     const submitSellForm = (event: FormEvent) => {
         event.preventDefault();
-        sellQuantity(product,sellValue)
+        sellQuantity(product,formSaleValue)
     };
     return (
         <Box>
@@ -32,7 +32,7 @@ export const QuantityForm: React.FC<QuantityFormProps> = ({product, index, updat
         <form key={product.id} onSubmit={submitSellForm}>
             <label>
                 Quantity to Sell
-                <input name="product" type="number" onChange={(event)=>sellValue=Number(event.target.value)}/>
+                <input name="product" type="number" onChange={(event)=>formSaleValue=Number(event.target.value)}/>
             </label>
             <button type="submit">Sell</button>
         </form>
