@@ -4,13 +4,12 @@ import {Box} from "@mui/material";
 
 interface QuantityFormProps {
     product: Product,
-    index: number,
     updateQuantity:(product:Product)=>void,
     sellQuantity:(product:Product, saleQuantity:number)=>void,
 }
 
 
-export const QuantityForm: React.FC<QuantityFormProps> = ({product, index, updateQuantity, sellQuantity}) => {
+export const QuantityForm: React.FC<QuantityFormProps> = ({product, updateQuantity, sellQuantity}) => {
     let formSaleValue=0;
     const submitAddForm = (event: FormEvent) => {
         event.preventDefault();
@@ -22,14 +21,14 @@ export const QuantityForm: React.FC<QuantityFormProps> = ({product, index, updat
     };
     return (
         <Box>
-        <form key={product.id} onSubmit={submitAddForm}>
+        <form onSubmit={submitAddForm}>
             <label>
                 Quantity to Add
                 <input name="product" type="number" onChange={(event)=>product.quantity=Number(event.target.value)}/>
             </label>
             <button type="submit">Add</button>
         </form>
-        <form key={product.id} onSubmit={submitSellForm}>
+        <form onSubmit={submitSellForm}>
             <label>
                 Quantity to Sell
                 <input name="product" type="number" onChange={(event)=>formSaleValue=Number(event.target.value)}/>

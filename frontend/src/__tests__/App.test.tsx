@@ -40,58 +40,60 @@ describe("inventory", () => {
     });
 
     describe("when I add or sell inventory of a product", () => {
-        it("should display the product with updated inventory", async () => {
+        beforeEach(async ()=>{
             mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product", quantity: 0});
             mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", quantity: 0}]);
 
             render(<App/>)
+        });
+
+        it("should display the product with updated inventory", async () => {
+
 
             const addButton = await screen.findByRole('button', {name: /add/i});
             const quantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Add"});
 
-            userEvent.click(quantityDropDown);
+            userEvent.click(addButton);
             userEvent.type(quantityDropDown, '3');
             userEvent.click(addButton);
             expect(await screen.findByText('Quantity: 3')).toBeInTheDocument();
         })
         it("should present sale notification toast when a sale is completed",async ()=>{
-            mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product", quantity: 0});
-            mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", quantity: 0}]);
-
-            render(<App/>)
-
-            const sellButton = await screen.findByRole('button', {name: /sell/i});
-            const quantitySellDropDown = screen.getByRole('spinbutton', {name: "Quantity to Sell"});
-
             const addButton = await screen.findByRole('button', {name: /add/i});
-            const quantityAddDropDown = screen.getByRole('spinbutton', {name: "Quantity to Add"});
+            const sellButton = await screen.findByRole('button', {name: /sell/i});
+            const addQuantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Add"});
+            const sellQuantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Sell"});
 
-            userEvent.click(quantityAddDropDown);
-            userEvent.type(quantityAddDropDown, '3');
             userEvent.click(addButton);
+            userEvent.type(addQuantityDropDown, '3');
+            userEvent.click(addButton);
+
             await screen.findByText('Quantity: 3');
 
-            userEvent.click(quantitySellDropDown);
-            userEvent.type(quantitySellDropDown, '2');
+            userEvent.click(sellQuantityDropDown);
+            userEvent.type(sellQuantityDropDown, '2');
             userEvent.click(sellButton);
 
             expect(await screen.findByText("Sell: shiny new product X 2")).toBeInTheDocument();
 
         })
-        it("should present sale DECLINATION toast when a sale is invalid",async ()=>{
-            mockCreateProduct.mockResolvedValue({id:1,name: "shiny new product", quantity: 0});
-            mockGetProducts.mockResolvedValue([{id:1,name: "shiny new product", quantity: 0}]);
-
-            render(<App/>)
-
+        it("should present partial sales toast when a sale is too large",async ()=>{
+            const addButton = await screen.findByRole('button', {name: /add/i});
             const sellButton = await screen.findByRole('button', {name: /sell/i});
-            const quantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Sell"});
+            const addQuantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Add"});
+            const sellQuantityDropDown = screen.getByRole('spinbutton', {name: "Quantity to Sell"});
 
-            userEvent.click(quantityDropDown);
-            userEvent.type(quantityDropDown, '3');
+            userEvent.click(addQuantityDropDown);
+            userEvent.type(addQuantityDropDown, '3');
+            userEvent.click(addButton);
+
+            await screen.findByText('Quantity: 3');
+
+            userEvent.click(sellQuantityDropDown);
+            userEvent.type(sellQuantityDropDown, '4');
             userEvent.click(sellButton);
-            expect(await screen.findByText("Cannot Sell - inventory too low!")).toBeInTheDocument();
 
+            expect(await screen.findByText("Partial Order for: shiny new product X 3")).toBeInTheDocument();
         })
     })
 });

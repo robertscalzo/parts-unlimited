@@ -12,12 +12,12 @@ export interface PartListProps {
 export const PartList: React.FC<PartListProps> = ({products, updateQuantity,sellQuantity}) => {
     return (<>
        <h2>Product</h2>
-            {products.map((product, index) => {
+            {products.map((product) => {
             return (
-                <Box key={index}>
+                <Box key={product.id}>
                     <div>{product.name}</div>
                     <div>Quantity: {product.quantity}</div>
-                <QuantityForm product={product} index={index} updateQuantity={updateQuantity} sellQuantity={sellQuantity}/>
+                <QuantityForm product={product} updateQuantity={updateQuantity} sellQuantity={sellQuantity}/>
                 </Box>
             )})}
     </>

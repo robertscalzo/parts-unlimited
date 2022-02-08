@@ -41,16 +41,20 @@ const App = () => {
         updateProductQuantity(product);
         setSaleQuantity(product.quantity.toString());
     }
-    const sellQuantity = (product: Product, sellValue: number) => {
-        if (product.quantity >= sellValue) {
-            product.quantity = product.quantity - sellValue;
+    const sellQuantity = (product: Product, saleQuantity: number) => {
+        if (product.quantity >= saleQuantity) {
+            product.quantity = product.quantity - saleQuantity;
             updateQuantity(product);
-            setSaleQuantity(sellValue.toString());
-            setSaleProductName(product.name);
+
+            setSaleQuantity(saleQuantity.toString());
+            setSaleProductName("Sell: " + product.name);
             displayToast();
         } else {
-            setSaleQuantity("");
-            setSaleProductName("Cannot Sell - inventory too low!");
+            setSaleQuantity(product.quantity.toString());
+            setSaleProductName("Partial Order for: " + product.name);
+
+            updateQuantity(product);
+            product.quantity = 0;
             displayToast();
         }
     }
@@ -74,7 +78,7 @@ const App = () => {
                     open={open}
                     autoHideDuration={6000}
                     onClose={handleClose}
-                    message={saleQuantity ? "Sell: " + saleProductName + " X " + saleQuantity : saleProductName}
+                    message={saleQuantity ? saleProductName + " X " + saleQuantity : saleProductName}
                 />
             </Box>
         </Container>

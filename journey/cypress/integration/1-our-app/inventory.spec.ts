@@ -13,21 +13,23 @@ describe("inventory", () => {
   });
   describe("when changing a quantity on an existing product",()=>{
     it("should display the new product quantity with the updated value",()=>{
-      cy.findByRole("spinbutton",{name:"Quantity to Add"}).click().type("3");
+      cy.findByRole("spinbutton",{name:"Quantity to Add"}).click().type("6");
       cy.findByRole('button',{name:"Add"}).click()
-      cy.findByText("Quantity: 3").should("exist");
+      cy.findByText("Quantity: 6").should("exist");
     })
   })
+
   describe("when trying to sell product",()=>{
-    it("should display DECLINATION message if you sell too much",()=>{
-      cy.findByRole("spinbutton",{name:"Quantity to Sell"}).click().type("4");
-      cy.findByRole('button',{name:"Sell"}).click()
-      cy.findByText("Cannot Sell - inventory too low!").should("exist");
-    })
     it("should display correct quantity in  message if sale is valid",()=>{
       cy.findByRole("spinbutton",{name:"Quantity to Sell"}).click().clear().type("2");
       cy.findByRole('button',{name:"Sell"}).click()
       cy.findByText("Sell: shiny-new-product X 2").should("exist");
+    })
+
+    it("should display partial sale message if you sale is too larger",()=>{
+      cy.findByRole("spinbutton",{name:"Quantity to Sell"}).click().clear().type("5");
+      cy.findByRole('button',{name:"Sell"}).click()
+      cy.findByText("Partial Order for: shiny-new-product X 4").should("exist");
     })
   })
 });
